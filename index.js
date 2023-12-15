@@ -13,15 +13,13 @@ function delay(ms) {
 }
 
 async function downloadImage(url, filePath) {
-    const dir = path.dirname(filePath);
-    const base = path.basename(filePath);
-    const newDir = path.join(dir, networkName);
-    if (!fs.existsSync(newDir)) {
-        fs.mkdirSync(newDir, { recursive: true });
-    }
-    const newFilePath = path.join(newDir, base);
-    const file = fs.createWriteStream(newFilePath);
     console.log(`Downloading ${url}`);
+
+    const dir = path.dirname(filePath);
+    if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+    }
+    const file = fs.createWriteStream(filePath);
     https.get(url, function (response) {
         response.pipe(file);
     });
@@ -29,7 +27,7 @@ async function downloadImage(url, filePath) {
 
 async function processTokens(tokens) {
     for (const token of tokens) {
-        await delay(1000);
+        await delay(200);
         const address = token.address;
         const logoURI = token.logoURI;
         const filePath = path.join(__dirname, `${networkName}/${address}/logo.png`);
